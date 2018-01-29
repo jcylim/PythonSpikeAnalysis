@@ -7,6 +7,7 @@ Created by Jonathan Lim to process data from MATLAB
 from __future__ import print_function
 
 import numpy as np
+from nose.tools import *
 import matplotlib.pyplot as plt
 import struct
 import quickspikes as qs
@@ -45,13 +46,15 @@ p.yaxis.axis_label = "Voltage (µV)"'''
 for i in range(10):
     testX.append(x[i])
     testY.append(y[i])
-print(testY)
-det = qs.detector(1000, 30)
-for val in testY:
+det = qs.detector(0, 100)
+print(det)
+times = det.send(np.array(testY))
+print(det)
+'''for val in testY:
     b = struct.pack('f', val)
     print(b)
-#times = det.send(testY)
-print("final b: ", b)
+print("final b: ", b)'''
+
 # add a line renderer
 '''p.line(x, y, line_width=2)
 show(p)
