@@ -22,7 +22,13 @@ with open(DATA_PATH) as f:
     rawData = f.read()
 
 rawData = rawData.split('\n')
+<<<<<<< HEAD
 data, x, y, spikeValues = ([] for i in range(4))
+=======
+data, x, y = ([] for i in range(3))
+testX, testY = ([] for i in range(2))
+ba = bytearray()
+>>>>>>> 021e8205062983a4f6fb4659330f045a153a9da6
 
 for i in range(len(rawData)):
     if i == 0 or i == 1 or i == 3:
@@ -36,6 +42,7 @@ for i in range(len(data)-1):
     x.append(float(data[i][0]))
     y.append(float(data[i][1]))
 
+<<<<<<< HEAD
 np.save('A4.npy', y)
 thres = -3*y[3749999]
 det = qs.detector(thres, 1000) #quickspikes function
@@ -73,3 +80,34 @@ p1.legend.background_fill_color = "darkgrey"
 p1.xaxis.axis_label = 'Voltage (µV)'
 p1.yaxis.axis_label = 'Counts'
 show(p1)'''
+=======
+#graphing dataset with Bokeh
+'''output_file("A4.html", title="A4")
+p = figure(plot_width=1000, plot_height=700)
+p.xaxis.axis_label = "Time (ms)"
+p.yaxis.axis_label = "Voltage (µV)"'''
+for i in range(10):
+    testX.append(x[i])
+    testY.append(y[i])
+det = qs.detector(0, 100)
+print(det)
+times = det.send(np.array(testY))
+print(det)
+'''for val in testY:
+    b = struct.pack('f', val)
+    print(b)
+print("final b: ", b)'''
+
+# add a line renderer
+'''p.line(x, y, line_width=2)
+show(p)
+
+#graphing dataset with pyplot
+plt.figure()
+plt.plot(x, y, '-b', label=data[0][1])
+plt.xlabel("Time (ms)")
+plt.ylabel("Voltage (µV)")
+#plt.ylim(-10, 10)
+plt.legend(loc="upper center")
+plt.show()'''
+>>>>>>> 021e8205062983a4f6fb4659330f045a153a9da6
