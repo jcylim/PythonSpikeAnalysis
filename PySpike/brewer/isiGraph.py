@@ -54,17 +54,29 @@ if len(times) != 0:
         spikeValues.append(y[times[t]])
 print("Spike Voltage Values:", spikeValues)
 
-#graphing spikes vs ISI histogram
+#graphing spikes vs ISI histogram (log scale)
 output_file("A4.html", title="A4")
+p1 = figure(title="ISI Histogram", background_fill_color="#E8DDCB", plot_width=1200, plot_height=850, y_axis_type="log", x_axis_type="log")
+hist, edges = np.histogram(isi, density=True, bins=np.logspace(np.log10(1),np.log10(100), 100)) #hist = y, and edges = x; density=True shows probability
+p1.quad(top=hist, bottom=0.001, left=edges[:-1], right=edges[1:],
+        fill_color="#036564", line_color="#033649")
+p1.legend.location = "center_right"
+p1.legend.background_fill_color = "darkgrey"
+p1.xaxis.axis_label = 'ISI (Log Scale)'
+p1.yaxis.axis_label = 'ISI Probability Distribution (Log Scale)'
+show(p1)
+
+#graphing spikes vs ISI histogram
+'''output_file("A4.html", title="A4")
 p1 = figure(title="ISI Histogram", background_fill_color="#E8DDCB", plot_width=1200, plot_height=850)
-hist, edges = np.histogram(isi, density=False, bins=100) #hist = y, and edges = x; density=False shows probability
+hist, edges = np.histogram(isi, density=False, bins=10) #hist = y, and edges = x; density=False shows probability
 p1.quad(top=hist, bottom=0, left=edges[:-1], right=edges[1:],
         fill_color="#036564", line_color="#033649")
 p1.legend.location = "center_right"
 p1.legend.background_fill_color = "darkgrey"
 p1.xaxis.axis_label = 'ISI'
 p1.yaxis.axis_label = 'Counts'
-show(p1)
+show(p1)'''
 
 #graphing spikes vs voltage histogram
 '''output_file("A4.html", title="A4")
