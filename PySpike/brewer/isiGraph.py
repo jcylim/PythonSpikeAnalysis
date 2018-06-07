@@ -29,7 +29,7 @@ with open(DATA_PATH) as f:
 
 rawData = rawData.split('\n')
 tempCountValue = 0
-data, x, y, spikeValues, isi, processed_edges, processed_hist, graph_hist = ([] for i in range(8))
+data, x, y, spikeValues, isi, processed_edges, processed_hist, graph_hist, win_hist, win_edges = ([] for i in range(10))
 
 for i in range(len(rawData)):
     if i == 0 or i == 1 or i == 3:
@@ -93,11 +93,23 @@ processed_hist.pop(1)
 processed_hist.pop(2)
 processed_hist.pop(3)
 print(len(processed_hist), processed_hist)
-logEdges = np.log(processed_edges)
-logHist = np.log(processed_hist)
+#windowing filter for better fit of data
+for i in range(len(processed_hist)):
+    if processed_hist[i] < 0.022:
+        continue
+    win_hist.append(processed_hist[i])
+    win_edges.append(processed_edges[i])
+print("windowed edges: ", len(win_edges), win_edges)
+print("windowed hist: ", len(win_hist), win_hist)
+logEdges = np.log(win_edges)
+logHist = np.log(win_hist)
+print("logEdges: ", logEdges)
+print("logHist: ", logHist)
 slope, intercept, r_value, p_value, std_err = stats.linregress(logEdges, logHist)
 print("slope: ", slope)
 print("intercept: ", intercept)
+print("correlation: ", r_value)
+print("probability: ", p_value)
 graph_hist = np.exp(slope*logEdges + intercept)
 print(graph_hist)
 #p1.circle(processed_edges, graph_hist, size=10, color="navy", alpha=0.5)
@@ -107,18 +119,6 @@ p1.legend.background_fill_color = "darkgrey"
 p1.xaxis.axis_label = 'ISI (Log-Scaled)' #label milliseconds
 p1.yaxis.axis_label = 'ISI Probability Distribution (Log-Scaled)'
 show(p1)
-
-'''if __name__ == "__main__":
-    while 1:
-        folder = input("Which chamber would you like to graph? 1) EC 2) DG 3) CA1 4) CA3")
-        if type(folder)!= str:
-            print("Please input a valid file name.")
-        else:
-            filename = input("Which electrode would you like to graph? ")
-            if type(filename) != str:
-                print("Please input a valid file name.")
-            else:
-                output_file(filename + ".html", title=filename)'''
 
 '''plt.hist(isi, normed=True, bins=np.logspace(np.log10(1), np.log10(100), 100), log=True)
 plt.plot(processed_edges, graph_hist, 'r', label='fitted line')
